@@ -1,0 +1,16 @@
+naver:
+  client:
+  id:
+  secret: nGRNN_CStH
+  local: https://openapi.naver.com/v1/search/local.json
+  image: https://openapi.naver.com/v1/search/image
+  url:
+  search:
+---
+server:
+  port: 9091
+---
+naver_id: 2lWzsgurEbA9GM8DhY7s
+naver_secret: nGRNN_CStH
+naver_url_search_local: https://openapi.naver.com/v1/search/local.json
+naver_url_search_image: https://openapi.naver.com/v1/search/image
