@@ -2,10 +2,12 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Main } from "./components/main";
+import SearchContainer from "./containers/SearchContainer";
 
 function App() {
   return (
-    <Main />
+    <SearchContainer />
+    // <Main />
     // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />

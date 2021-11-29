@@ -4,28 +4,30 @@ import { styled, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { getWishLists } from "../data/WishListDO";
 
-export interface IMainProps {}
-export const Main: React.FC<IMainProps> = ({}) => {
-  const [search, setSearch] = useState<String>();
-
+export interface IMainProps {
+  onChangeInput: any;
+  input: any;
+}
+export const Main: React.FC<IMainProps> = ({ onChangeInput, input }) => {
   const handleTextField = useCallback(
     (e) => {
-      setSearch(e.target.value);
+      onChangeInput(e.target.value);
+      console.log(input);
     },
-    [search]
+    [input, onChangeInput]
   );
 
   const onClickApply = useCallback(
     async (e) => {
-      console.log(search);
-      const data = await getWishLists(search!);
+      console.log(input);
+      const data = await getWishLists(input!);
       console.log(data);
     },
-    [search]
+    [input, onChangeInput]
   );
   return (
     <Wrapper>
-      <SearchContainer>
+      <SearchWrapper>
         <StyledTextField
           variant="outlined"
           onChange={handleTextField}
@@ -33,7 +35,7 @@ export const Main: React.FC<IMainProps> = ({}) => {
         <StyledButton onClick={onClickApply} variant="contained">
           검색
         </StyledButton>
-      </SearchContainer>
+      </SearchWrapper>
       <TitleWrapper>
         <ResultTitle>나의 맛집 리스트</ResultTitle>
       </TitleWrapper>
@@ -52,7 +54,7 @@ export const Wrapper = styled("div")(({ theme }) => ({
   flexDirection: "column",
 }));
 
-export const SearchContainer = styled("div")(({ theme }) => ({
+export const SearchWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "center",
