@@ -18,5 +18,9 @@ export const getWishLists = async (query: String) => {
     `search?query=${query}`
   );
   console.log(response);
-  if (!isProObjectError(response)) return response.data;
+  if (!isProObjectError(response))
+    return {
+      type: "GET",
+      payload: response.data,
+    };
 };
