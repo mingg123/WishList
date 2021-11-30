@@ -1,13 +1,20 @@
 const CHANGE_INPUT = "search/CHANGE_INPUT";
 
+const initialState = {
+  input: "",
+};
+
+// export const changeInput = createAction(CHANGE_INPUT, (input: String) => input);
+
+// const search = createReducer(initialState).handleAction(changeInput, (state: any, {payload}) => {
+//   ...state,
+//   input : payload.input,
+// })
+
 export const changeInput = (input: String) => ({
   type: CHANGE_INPUT,
   input,
 });
-
-const initialState = {
-  input: "",
-};
 
 function search(state = initialState, action: any) {
   switch (action.type) {

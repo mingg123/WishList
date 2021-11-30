@@ -3,18 +3,21 @@ import TextField from "@mui/material/TextField";
 import { styled, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { getWishLists } from "../data/WishListDO";
+import { useDispatch } from "react-redux";
+import { changeInput } from "../modules/search";
 
 export interface IMainProps {
-  onChangeInput: any;
   input: any;
 }
-export const Main: React.FC<IMainProps> = ({ onChangeInput, input }) => {
+export const Main: React.FC<IMainProps> = ({ input }) => {
+  const dispatch = useDispatch();
   const handleTextField = useCallback(
     (e) => {
-      onChangeInput(e.target.value);
+      // onChangeInput(e.target.value);
+      dispatch(changeInput(e.target.value));
       console.log(input);
     },
-    [input, onChangeInput]
+    [input, dispatch]
   );
 
   const onClickApply = useCallback(
@@ -23,7 +26,7 @@ export const Main: React.FC<IMainProps> = ({ onChangeInput, input }) => {
       const data = await getWishLists(input!);
       console.log(data);
     },
-    [input, onChangeInput]
+    [input, dispatch]
   );
   return (
     <Wrapper>

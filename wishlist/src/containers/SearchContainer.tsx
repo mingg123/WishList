@@ -1,14 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { Main } from "../components/main";
+import { RootState } from "../modules";
 import { changeInput } from "../modules/search";
 
 interface SearchInfo {
   changeInput: any;
   input: String;
 }
-const SearchContainer: React.FC<SearchInfo> = ({ changeInput, input }) => {
-  return <Main onChangeInput={changeInput} input={input} />;
+const SearchContainer: React.FC<SearchInfo> = ({}) => {
+  const input = useSelector((state: RootState) => state.search.input);
+  return <Main input={input} />;
 };
 
 const mapStateToProps = (state: any) => ({
