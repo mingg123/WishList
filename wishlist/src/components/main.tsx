@@ -1,13 +1,17 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { styled, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { getWishLists } from "../data/WishListDO";
+import { getWishLists, WishListDO } from "../data/WishListDO";
 import { useDispatch } from "react-redux";
 import { changeInput } from "../modules/search";
 
 export interface IMainProps {
   input: any;
+}
+export interface WisiListsData {
+  type?: string;
+  payload?: any;
 }
 export const Main: React.FC<IMainProps> = ({ input }) => {
   const dispatch = useDispatch();
@@ -20,14 +24,19 @@ export const Main: React.FC<IMainProps> = ({ input }) => {
     [input, dispatch]
   );
 
+  let data: WisiListsData;
   const onClickApply = useCallback(
     async (e) => {
       console.log(input);
-      const data = await getWishLists(input!);
+      const wishList = await getWishLists(input!);
+      if (wishList) {
+        data = wishList;
+      }
       console.log(data);
     },
     [input, dispatch]
   );
+
   return (
     <Wrapper>
       <SearchWrapper>
