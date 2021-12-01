@@ -2,18 +2,22 @@ import React, { useCallback, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { styled, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { getWishLists, WishListDO } from "../data/WishListDO";
-import { useDispatch } from "react-redux";
+import { WishListDO } from "../data/WishListDO";
+import { useDispatch, useSelector } from "react-redux";
 import { changeInput } from "../modules/search";
+import { RootState } from "../modules";
+import { getList } from "../modules/wishList";
 
 export interface IMainProps {
   input: any;
+  lists: WishListDO;
+  loadingList?: any;
 }
 export interface WisiListsData {
   type?: string;
   payload?: any;
 }
-export const Main: React.FC<IMainProps> = ({ input }) => {
+export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
   const dispatch = useDispatch();
   const handleTextField = useCallback(
     (e) => {
@@ -24,15 +28,9 @@ export const Main: React.FC<IMainProps> = ({ input }) => {
     [input, dispatch]
   );
 
-  let data: WisiListsData;
   const onClickApply = useCallback(
     async (e) => {
-      console.log(input);
-      const wishList = await getWishLists(input!);
-      if (wishList) {
-        data = wishList;
-      }
-      console.log(data);
+      dispatch(getList(input));
     },
     [input, dispatch]
   );
@@ -52,7 +50,24 @@ export const Main: React.FC<IMainProps> = ({ input }) => {
         <ResultTitle>나의 맛집 리스트</ResultTitle>
       </TitleWrapper>
       <ResultWrapper>
-        <ImageWrapper>left</ImageWrapper>
+        <ImageWrapper>
+          <div>
+            {
+              lists && !loadingList && (
+                <>
+                  <li> {lists.title}</li>
+                  <li>{lists.category} </li>
+                  <li>{lists.address}</li>
+                  <li>{lists.homePageLink}</li>
+                  <li>{lists.imageLink}</li>
+                </>
+              )
+              // lists.map((list: any) => (
+              //   <li key={lists.index}>{lists.title}</li>
+              // ))
+            }
+          </div>
+        </ImageWrapper>
         <ImageInfoContainer>right</ImageInfoContainer>
       </ResultWrapper>
     </Wrapper>
