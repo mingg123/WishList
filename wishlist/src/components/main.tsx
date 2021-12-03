@@ -6,13 +6,21 @@ import { WishListDO } from "../data/WishListDO";
 import { useDispatch, useSelector } from "react-redux";
 import { changeInput } from "../modules/search";
 import { RootState } from "../modules";
-import { addWishList, getList } from "../modules/wishList";
+import { addWishList, getAllList, getList } from "../modules/wishList";
+interface MyWishListProps {
+  allList: WishListDO[];
+}
+interface ImageResultProps {
+  list: WishListDO;
+  loadingList: boolean;
+}
 export interface IMainProps {
   input: string;
-  lists: WishListDO;
+  list: WishListDO;
+  allList: WishListDO[];
   loadingList?: any;
 }
-export interface WisiListsData {
+export interface WisilistData {
   type?: string;
   payload?: any;
 }
@@ -20,7 +28,12 @@ export interface ImageContentProps {
   title: string;
   content?: string;
 }
-export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
+export const Main: React.FC<IMainProps> = ({
+  input,
+  list,
+  loadingList,
+  allList,
+}) => {
   const dispatch = useDispatch();
   const handleTextField = useCallback(
     (e) => {
@@ -38,12 +51,12 @@ export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
     [input, dispatch]
   );
 
-  const onClickAddWishList = useCallback(
-    async (e) => {
-      dispatch(addWishList(lists));
-    },
-    [input, lists, dispatch]
-  );
+  // const onClickAddWishList = useCallback(
+  //   async (e) => {
+  //     dispatch(addWishList(list));
+  //   },
+  //   [input, list, dispatch]
+  // );
 
   const onClickDeleteWish = useCallback(() => {
     console.log("delete");
@@ -60,86 +73,133 @@ export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
           검색
         </StyledButton>
       </SearchWrapper>
+      <ImageResultComponent list={list} loadingList={loadingList} />
+      <MyWishListComponet allList={allList} />
+    </Wrapper>
+  );
+};
+const MyWishListComponet: React.FC<MyWishListProps> = ({ allList }) => {
+  const dispatch = useDispatch();
+  const onClickAllWishList = useCallback(
+    async (e) => {
+      dispatch(getAllList());
+    },
+    [dispatch]
+  );
+
+  return (
+    <>
       <TitleWrapper>
         <ResultTitle>나의 맛집 리스트</ResultTitle>
       </TitleWrapper>
+      <MyWishListContent>
+        <StyledImageButton
+          onClick={onClickAllWishList}
+          style={{ marginTop: 100 }}
+          variant="contained"
+        >
+          불러오기
+        </StyledImageButton>
+        <AllResultWrapper>
+          {allList &&
+            allList.map((list) => (
+              <ImageResultComponent list={list} loadingList={false} />
+            ))}
+        </AllResultWrapper>
+      </MyWishListContent>
+    </>
+  );
+};
+
+const ImageResultComponent: React.FC<ImageResultProps> = ({
+  list,
+  loadingList,
+}) => {
+  const dispatch = useDispatch();
+  const onClickAddWishList = useCallback(
+    async (e) => {
+      dispatch(addWishList(list));
+    },
+    [list, dispatch]
+  );
+  return (
+    <>
       <ResultWrapper>
         <ImageWrapper>
-          {lists && !loadingList && (
+          {list && !loadingList && (
             <img
-              src={lists.imageLink}
+              src={list.imageLink}
               style={{ maxHeight: "500px", maxWidth: "500px" }}
             />
           )}
         </ImageWrapper>
         <ImageInfoContainer>
-          {lists && (
+          {list && (
             <>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"장소"}
-                  content={lists.title.replace(/<(\/b|b)([^>]*)>/gi, "")}
+                  content={list.title.replace(/<(\/b|b)([^>]*)>/gi, "")}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"카테고리"}
-                  content={lists.category}
+                  content={list.category}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
-                <ImageContentComponent title={"주소"} content={lists.address} />
+                <ImageContentComponent title={"주소"} content={list.address} />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"도로명"}
-                  content={lists.readAddress}
+                  content={list.readAddress}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"방문 여부"}
-                  content={lists.isVisit ? "O" : "X"}
+                  content={list.isVisit ? "O" : "X"}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"마지막 방문 일자"}
-                  content={lists.lastVisitDate}
+                  content={list.lastVisitDate}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"방문횟수"}
-                  content={lists.visitCount.toString()}
+                  content={list.visitCount.toString()}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"홈페이지"}
-                  content={lists.homePageLink}
+                  content={list.homePageLink}
                 />
               </ImageContentContainer>
+              <StyledButtonWrapper>
+                <StyledImageButton
+                  onClick={onClickAddWishList}
+                  style={{ marginBottom: 20 }}
+                  variant="contained"
+                >
+                  위시리스트 추가
+                </StyledImageButton>
+                <StyledImageButton variant="contained">
+                  위시리스트 삭제
+                </StyledImageButton>
+              </StyledButtonWrapper>
             </>
           )}
-          <StyledButtonWrapper>
-            <StyledImageButton
-              onClick={onClickAddWishList}
-              style={{ marginBottom: 20 }}
-              variant="contained"
-            >
-              위시리스트 추가
-            </StyledImageButton>
-            <StyledImageButton variant="contained">
-              위시리스트 삭제
-            </StyledImageButton>
-          </StyledButtonWrapper>
         </ImageInfoContainer>
       </ResultWrapper>
-    </Wrapper>
+    </>
   );
 };
-
 const ImageContentComponent: React.FC<ImageContentProps> = ({
   title,
   content,
@@ -166,8 +226,8 @@ const ImageContentComponent: React.FC<ImageContentProps> = ({
   );
 };
 export const Wrapper = styled("div")(({ theme }) => ({
-  height: "100vh",
-  width: "100vw",
+  height: "100%",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
 }));
@@ -184,7 +244,9 @@ export const TitleWrapper = styled("div")(({ theme }) => ({
   flexDirection: "row",
   justifyContent: "center",
   backgroundColor: "#B4C3FF",
+  marginTop: 100,
   height: 50,
+  minHeight: 50,
 }));
 
 export const ResultTitle = styled("div")(({ theme }) => ({
@@ -206,13 +268,20 @@ export const StyledButton = styled(Button)(({ theme }) => ({
 export const ResultWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
-  paddingTop: 100,
+  borderBottom: "1px solid #d3d3d3",
+  padding: "2em",
 }));
 
+export const AllResultWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+}));
 export const ImageWrapper = styled("div")(({ theme }) => ({
   width: "50%",
   display: "flex",
   justifyContent: "center",
+  minWidth: 500,
+  minHeight: 500,
 }));
 
 export const ImageInfoContainer = styled("div")(({ theme }) => ({
@@ -245,4 +314,11 @@ export const StyledImageButton = styled(Button)(({ theme }) => ({
   minHeight: "50px",
   backgroundColor: "#B4C3FF",
   color: "black",
+}));
+
+export const MyWishListContent = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  // marginTop: 100,
 }));

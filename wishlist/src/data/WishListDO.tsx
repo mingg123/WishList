@@ -17,7 +17,7 @@ export interface WishListDO {
 
 export const getWishAPI = (query: String) =>
   axios.get(`http://localhost:9091/springapi/restarant/search?query=${query}`);
-// export const getWishLists = async (query: String) => {
+// export const getWishlist = async (query: String) => {
 //   const response = await WishListAxios.get<[WishListDO]>(
 //     `search?query=${query}`
 //   );
@@ -31,3 +31,6 @@ export const getWishAPI = (query: String) =>
 
 export const addWishListAPI = (data: WishListDO) =>
   axios.post(`http://localhost:9091/springapi/restarant/`, data);
+
+export const getAllWishListAPI = () =>
+  axios.get(`http://localhost:9091/springapi/restarant/all`);
