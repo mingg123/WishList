@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { Main } from "./components/main";
 import SearchContainer from "./containers/SearchContainer";
-
+// const cors = require("cors");
 function App() {
   return (
     <SearchContainer />
@@ -27,4 +27,5 @@ function App() {
   );
 }
 
+// App.use(cros());
 export default App;

@@ -38,7 +38,7 @@ public class ApiController {
     // 방문 추가
     @PostMapping("")
     public WishListDto add(@RequestBody WishListDto wishListDto) {
-        log.info("{}", wishListDto);
+        log.info("추가 : {}", wishListDto);
         return wishListService.add(wishListDto);
     }
 

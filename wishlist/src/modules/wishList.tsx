@@ -1,10 +1,12 @@
 import { AxiosResponse } from "axios";
 import { handleActions } from "redux-actions";
-import { getWishAPI } from "../data/WishListDO";
+import { addVisitAPI, getWishAPI, WishListDO } from "../data/WishListDO";
 
 const GET_LIST = "wishList/GET_LIST";
 const GET_LIST_SUCCESS = "wishList/get_LIST_SUCCESS";
 const GET_LIST_FAILURE = "wishList/GET_LIST_FAILURE";
+
+const POST_VISIT = "wishList/POST_VISIT";
 
 const initialState = {
   loading: {
@@ -36,6 +38,13 @@ const wishList = handleActions<any, any>(
       },
       lists: action.payload,
     }),
+    [POST_VISIT]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        POST_VISIT: true,
+      },
+    }),
   },
   initialState
 );
@@ -53,6 +62,16 @@ export const getList = (query: string) => async (dispatch: any) => {
       payload: e,
       error: true,
     });
+    throw e;
+  }
+};
+
+export const addVisit = (data: WishListDO) => async (dispatch: any) => {
+  dispatch({ type: POST_VISIT });
+  try {
+    const response = await addVisitAPI(data);
+  } catch (e) {
+    console.log("방문 추가 실패");
     throw e;
   }
 };

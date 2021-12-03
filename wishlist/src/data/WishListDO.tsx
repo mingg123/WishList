@@ -3,15 +3,15 @@ import { isProObjectError, WishListAxios } from "../utils/SpringAxios";
 
 export interface WishListDO {
   index: number;
-  title: String;
-  category: String;
-  address: String;
-  readAddress: String;
-  homePageLink: String;
-  imageLink: String;
+  title: string;
+  category: string;
+  address: string;
+  readAddress: string;
+  homePageLink: string;
+  imageLink: string;
   isVisit: boolean;
   visitCount: number;
-  lastVisitDate: String;
+  lastVisitDate: string;
   //   LocalDateTime;
 }
 
@@ -28,3 +28,6 @@ export const getWishAPI = (query: String) =>
 //   //   payload: response.data,
 //   // };
 // };
+
+export const addVisitAPI = (data: WishListDO) =>
+  axios.post(`http://localhost:9091/springapi/restarant/`, data);
