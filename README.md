@@ -1,7 +1,7 @@
 # WishList
 
 # Introduction
-![image](https://user-images.githubusercontent.com/52990629/144570868-53c58590-228a-4d83-a225-98b65bd1f217.png)
+![image](https://user-images.githubusercontent.com/52990629/144571039-f0732e2f-b483-4b5b-83cf-7745f463d440.png)
 
 ![image](https://user-images.githubusercontent.com/52990629/144570906-9ff2c0b4-d27d-4fd4-a4a3-6e660d68d4cc.png)
 
