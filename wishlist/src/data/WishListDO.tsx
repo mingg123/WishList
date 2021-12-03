@@ -34,3 +34,6 @@ export const addWishListAPI = (data: WishListDO) =>
 
 export const getAllWishListAPI = () =>
   axios.get(`http://localhost:9091/springapi/restarant/all`);
+
+export const deleteWishListAPI = (index: number) =>
+  axios.delete(`http://localhost:9091/springapi/restarant/${index}`);

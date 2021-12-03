@@ -1,8 +1,10 @@
 import { AxiosResponse } from "axios";
+import { off } from "process";
 import { handleActions } from "redux-actions";
 import { action } from "typesafe-actions";
 import {
   addWishListAPI,
+  deleteWishListAPI,
   getAllWishListAPI,
   getWishAPI,
   WishListDO,
@@ -18,6 +20,8 @@ const GET_ALL_LIST = "wishList/GET_ALL_LIST";
 const GET_ALL_LIST_SUCCESS = "wishList/GET_ALL_LIST_SUCCESS";
 const GET_ALL_LIST_FAILURE = "wishList/GET_ALL_LIST_FAILURE";
 
+const DELETE_LIST = "wishList/DELETE_LIST";
+
 const initialState = {
   loading: {
     GET_LIST: false,
@@ -28,6 +32,13 @@ const initialState = {
 };
 const wishList = handleActions<any, any>(
   {
+    [DELETE_LIST]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        DELETE_LIST: true,
+      },
+    }),
     [GET_ALL_LIST]: (state) => ({
       ...state,
       loading: {
@@ -82,6 +93,7 @@ const wishList = handleActions<any, any>(
   },
   initialState
 );
+
 export const getList = (query: string) => async (dispatch: any) => {
   dispatch({ type: GET_LIST });
   try {
@@ -123,6 +135,20 @@ export const addWishList = (data: WishListDO) => async (dispatch: any) => {
     const response = await addWishListAPI(data);
   } catch (e) {
     console.log("위시리스트 추가 실패");
+    throw e;
+  }
+};
+
+export const deleteList = (idx: number) => async (dispatch: any) => {
+  dispatch({ type: DELETE_LIST });
+  try {
+    const response = await deleteWishListAPI(idx);
+    //이부분 한번만 더보기
+    // if (response.status == 200) {
+    //   await getAllWishListAPI();
+    // }
+  } catch (e) {
+    console.log("위시리스트 삭제 실패");
     throw e;
   }
 };

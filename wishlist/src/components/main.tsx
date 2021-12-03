@@ -6,7 +6,12 @@ import { WishListDO } from "../data/WishListDO";
 import { useDispatch, useSelector } from "react-redux";
 import { changeInput } from "../modules/search";
 import { RootState } from "../modules";
-import { addWishList, getAllList, getList } from "../modules/wishList";
+import {
+  addWishList,
+  deleteList,
+  getAllList,
+  getList,
+} from "../modules/wishList";
 interface MyWishListProps {
   allList: WishListDO[];
 }
@@ -51,17 +56,6 @@ export const Main: React.FC<IMainProps> = ({
     [input, dispatch]
   );
 
-  // const onClickAddWishList = useCallback(
-  //   async (e) => {
-  //     dispatch(addWishList(list));
-  //   },
-  //   [input, list, dispatch]
-  // );
-
-  const onClickDeleteWish = useCallback(() => {
-    console.log("delete");
-  }, []);
-
   return (
     <Wrapper>
       <SearchWrapper>
@@ -102,8 +96,8 @@ const MyWishListComponet: React.FC<MyWishListProps> = ({ allList }) => {
         </StyledImageButton>
         <AllResultWrapper>
           {allList &&
-            allList.map((list) => (
-              <ImageResultComponent list={list} loadingList={false} />
+            allList.map((list, idx) => (
+              <ImageResultComponent list={list} loadingList={false} key={idx} />
             ))}
         </AllResultWrapper>
       </MyWishListContent>
@@ -122,6 +116,14 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
     },
     [list, dispatch]
   );
+
+  const onClickDeleteWish = useCallback(
+    (idx: number) => {
+      dispatch(deleteList(idx));
+    },
+    [dispatch]
+  );
+
   return (
     <>
       <ResultWrapper>
@@ -189,7 +191,12 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
                 >
                   위시리스트 추가
                 </StyledImageButton>
-                <StyledImageButton variant="contained">
+                <StyledImageButton
+                  onClick={(e) => {
+                    onClickDeleteWish(list.index);
+                  }}
+                  variant="contained"
+                >
                   위시리스트 삭제
                 </StyledImageButton>
               </StyledButtonWrapper>
