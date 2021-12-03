@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { handleActions } from "redux-actions";
-import { addVisitAPI, getWishAPI, WishListDO } from "../data/WishListDO";
+import { addWishListAPI, getWishAPI, WishListDO } from "../data/WishListDO";
 
 const GET_LIST = "wishList/GET_LIST";
 const GET_LIST_SUCCESS = "wishList/get_LIST_SUCCESS";
@@ -66,12 +66,12 @@ export const getList = (query: string) => async (dispatch: any) => {
   }
 };
 
-export const addVisit = (data: WishListDO) => async (dispatch: any) => {
+export const addWishList = (data: WishListDO) => async (dispatch: any) => {
   dispatch({ type: POST_VISIT });
   try {
-    const response = await addVisitAPI(data);
+    const response = await addWishListAPI(data);
   } catch (e) {
-    console.log("방문 추가 실패");
+    console.log("위시리스트 추가 실패");
     throw e;
   }
 };

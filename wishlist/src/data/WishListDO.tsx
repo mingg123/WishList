@@ -29,5 +29,5 @@ export const getWishAPI = (query: String) =>
 //   // };
 // };
 
-export const addVisitAPI = (data: WishListDO) =>
+export const addWishListAPI = (data: WishListDO) =>
   axios.post(`http://localhost:9091/springapi/restarant/`, data);

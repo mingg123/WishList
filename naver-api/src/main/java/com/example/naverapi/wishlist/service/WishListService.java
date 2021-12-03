@@ -57,7 +57,6 @@ public class WishListService {
         return new WishListDto();
     }
 
-    // 방문 추가
     public WishListDto add(WishListDto wishListDto) {
         var entity = dtoToEntity(wishListDto);
         var saveEntity = wishListRepository.save(entity);
@@ -105,6 +104,7 @@ public class WishListService {
         wishListRepository.deleteById(index);
     }
 
+    // 방문 추가
     public void addVisit(int index) {
         log.info("index : {}", index);
         var wishItem = wishListRepository.findById(index);

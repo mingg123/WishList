@@ -3,7 +3,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { Main } from "../components/main";
 import { RootState } from "../modules";
 import { changeInput } from "../modules/search";
-import { getList, addVisit } from "../modules/wishList";
+import { getList, addWishList } from "../modules/wishList";
 
 interface SearchInfo {
   changeInput: any;
@@ -44,7 +44,7 @@ export default connect(
   {
     getList,
     changeInput,
-    addVisit,
+    addWishList,
   }
 )(SearchContainer);
 // export default connect(mapStateToProps, mapDispatchToProps)(SearchContainer);

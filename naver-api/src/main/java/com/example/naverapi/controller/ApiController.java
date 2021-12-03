@@ -8,6 +8,7 @@ import com.example.naverapi.wishlist.entity.WishListEntity;
 import com.example.naverapi.wishlist.repository.WishListRepository;
 import com.example.naverapi.wishlist.service.WishListService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/springapi/restarant")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ApiController {
 
     private final WishListService wishListService;
@@ -35,7 +37,7 @@ public class ApiController {
         return wishListService.search(query);
     }
 
-    // 방문 추가
+    // wishList추가
     @PostMapping("")
     public WishListDto add(@RequestBody WishListDto wishListDto) {
         log.info("추가 : {}", wishListDto);
@@ -52,6 +54,7 @@ public class ApiController {
         wishListService.delete(index);
     }
 
+    // 방문 추가
     @PostMapping("/{index}")
     public void addVisit(@PathVariable int index) {
         wishListService.addVisit(index);

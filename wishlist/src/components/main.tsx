@@ -6,7 +6,7 @@ import { WishListDO } from "../data/WishListDO";
 import { useDispatch, useSelector } from "react-redux";
 import { changeInput } from "../modules/search";
 import { RootState } from "../modules";
-import { addVisit, getList } from "../modules/wishList";
+import { addWishList, getList } from "../modules/wishList";
 export interface IMainProps {
   input: string;
   lists: WishListDO;
@@ -38,9 +38,9 @@ export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
     [input, dispatch]
   );
 
-  const onClickAddVisit = useCallback(
+  const onClickAddWishList = useCallback(
     async (e) => {
-      dispatch(addVisit(lists));
+      dispatch(addWishList(lists));
     },
     [input, lists, dispatch]
   );
@@ -124,11 +124,11 @@ export const Main: React.FC<IMainProps> = ({ input, lists, loadingList }) => {
           )}
           <StyledButtonWrapper>
             <StyledImageButton
-              onClick={onClickAddVisit}
+              onClick={onClickAddWishList}
               style={{ marginBottom: 20 }}
               variant="contained"
             >
-              방문 추가
+              위시리스트 추가
             </StyledImageButton>
             <StyledImageButton variant="contained">
               위시리스트 삭제
