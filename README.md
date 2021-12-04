@@ -3,7 +3,7 @@
 # Introduction
 ![image](https://user-images.githubusercontent.com/52990629/144709322-fb2e9030-80c8-4737-b62d-594c9fdf9ef5.png)
 
-![image](https://user-images.githubusercontent.com/52990629/144570906-9ff2c0b4-d27d-4fd4-a4a3-6e660d68d4cc.png)
+![image](https://user-images.githubusercontent.com/52990629/144709415-726729d9-16d1-4f8a-a573-fbe9a00aa77c.png)
 
 # TODO
 
