@@ -9,10 +9,9 @@ export interface WishListDO {
   readAddress: string;
   homePageLink: string;
   imageLink: string;
-  isVisit: boolean;
+  visit: boolean;
   visitCount: number;
   lastVisitDate: string;
-  //   LocalDateTime;
 }
 
 export const getWishAPI = (query: String) =>
@@ -37,3 +36,6 @@ export const getAllWishListAPI = () =>
 
 export const deleteWishListAPI = (index: number) =>
   axios.delete(`http://localhost:9091/springapi/restarant/${index}`);
+
+export const addVisitAPI = (index: number) =>
+  axios.post(`http://localhost:9091/springapi/restarant/${index}`);

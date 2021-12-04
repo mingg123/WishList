@@ -8,6 +8,7 @@ import {
   addWishList,
   getAllList,
   deleteList,
+  addVisit,
 } from "../modules/wishList";
 
 interface SearchInfo {
@@ -62,6 +63,7 @@ export default connect(
     addWishList,
     getAllList,
     deleteList,
+    addVisit,
   }
 )(SearchContainer);
 // export default connect(mapStateToProps, mapDispatchToProps)(SearchContainer);

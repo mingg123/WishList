@@ -1,5 +1,7 @@
 package com.example.naverapi.wishlist.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,8 +102,9 @@ public class WishListService {
         return wishListRepository.findAll().stream().map(it -> entityToDto(it)).collect(Collectors.toList());
     }
 
-    public void delete(int index) {
+    public List<WishListDto> delete(int index) {
         wishListRepository.deleteById(index);
+        return wishListRepository.findAll().stream().map(it -> entityToDto(it)).collect(Collectors.toList());
     }
 
     // 방문 추가
@@ -112,6 +115,7 @@ public class WishListService {
             var item = wishItem.get();
             item.setVisit(true);
             item.setVisitCount(item.getVisitCount() + 1);
+            item.setLastVisitDate(LocalDateTime.now());
         }
     }
 }

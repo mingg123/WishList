@@ -5,19 +5,23 @@ import Button from "@mui/material/Button";
 import { WishListDO } from "../data/WishListDO";
 import { useDispatch, useSelector } from "react-redux";
 import { changeInput } from "../modules/search";
-import { RootState } from "../modules";
+import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
+  addVisit,
   addWishList,
   deleteList,
   getAllList,
   getList,
 } from "../modules/wishList";
+import { flexbox } from "@mui/system";
 interface MyWishListProps {
   allList: WishListDO[];
 }
 interface ImageResultProps {
   list: WishListDO;
+  allList: WishListDO[];
   loadingList: boolean;
+  showAll: boolean;
 }
 export interface IMainProps {
   input: string;
@@ -60,14 +64,25 @@ export const Main: React.FC<IMainProps> = ({
     <Wrapper>
       <SearchWrapper>
         <StyledTextField
+          placeholder="위시리스트에 추가 할 내용을 입력해주세요"
           variant="outlined"
           onChange={handleTextField}
+          onKeyPress={(e) => {
+            if (e.key == "Enter") {
+              onClickApply(e);
+            }
+          }}
         ></StyledTextField>
         <StyledButton onClick={onClickApply} variant="contained">
           검색
         </StyledButton>
       </SearchWrapper>
-      <ImageResultComponent list={list} loadingList={loadingList} />
+      <ImageResultComponent
+        list={list}
+        allList={allList}
+        loadingList={loadingList}
+        showAll={false}
+      />
       <MyWishListComponet allList={allList} />
     </Wrapper>
   );
@@ -87,17 +102,19 @@ const MyWishListComponet: React.FC<MyWishListProps> = ({ allList }) => {
         <ResultTitle>나의 맛집 리스트</ResultTitle>
       </TitleWrapper>
       <MyWishListContent>
-        <StyledImageButton
-          onClick={onClickAllWishList}
-          style={{ marginTop: 100 }}
-          variant="contained"
-        >
-          불러오기
-        </StyledImageButton>
+        <DownIconWrapper>
+          <StyledDownIcon onClick={onClickAllWishList} />
+        </DownIconWrapper>
         <AllResultWrapper>
           {allList &&
             allList.map((list, idx) => (
-              <ImageResultComponent list={list} loadingList={false} key={idx} />
+              <ImageResultComponent
+                list={list}
+                allList={allList}
+                loadingList={false}
+                key={idx}
+                showAll={true}
+              />
             ))}
         </AllResultWrapper>
       </MyWishListContent>
@@ -107,14 +124,23 @@ const MyWishListComponet: React.FC<MyWishListProps> = ({ allList }) => {
 
 const ImageResultComponent: React.FC<ImageResultProps> = ({
   list,
+  allList,
   loadingList,
+  showAll,
 }) => {
   const dispatch = useDispatch();
   const onClickAddWishList = useCallback(
     async (e) => {
-      dispatch(addWishList(list));
+      if (allList) {
+        const duplicatePlace = allList.some((lists) => {
+          return lists.address == list.address;
+        });
+        if (duplicatePlace) alert("이미 위시리스트에 추가되어 있습니다.");
+      } else {
+        dispatch(addWishList(list));
+      }
     },
-    [list, dispatch]
+    [list, allList, dispatch]
   );
 
   const onClickDeleteWish = useCallback(
@@ -122,6 +148,15 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
       dispatch(deleteList(idx));
     },
     [dispatch]
+  );
+
+  const onClickAddVisit = useCallback(
+    (idx: number) => {
+      console.log("add visit");
+      dispatch(addVisit(idx));
+      dispatch(getAllList());
+    },
+    [dispatch, list]
   );
 
   return (
@@ -162,7 +197,7 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"방문 여부"}
-                  content={list.isVisit ? "O" : "X"}
+                  content={list.visit == true ? "O" : "X"}
                 />
               </ImageContentContainer>
               <ImageContentContainer>
@@ -184,13 +219,26 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
                 />
               </ImageContentContainer>
               <StyledButtonWrapper>
-                <StyledImageButton
-                  onClick={onClickAddWishList}
-                  style={{ marginBottom: 20 }}
-                  variant="contained"
-                >
-                  위시리스트 추가
-                </StyledImageButton>
+                {showAll == true ? (
+                  <StyledImageButton
+                    onClick={(e) => {
+                      onClickAddVisit(list.index);
+                    }}
+                    style={{ marginBottom: 20 }}
+                    variant="contained"
+                  >
+                    방문 추가
+                  </StyledImageButton>
+                ) : (
+                  <StyledImageButton
+                    onClick={onClickAddWishList}
+                    style={{ marginBottom: 20 }}
+                    variant="contained"
+                  >
+                    위시리스트 추가
+                  </StyledImageButton>
+                )}
+
                 <StyledImageButton
                   onClick={(e) => {
                     onClickDeleteWish(list.index);
@@ -297,7 +345,8 @@ export const ImageInfoContainer = styled("div")(({ theme }) => ({
 }));
 
 export const ImageContentContainer = styled("div")(({ theme }) => ({
-  minWidth: "300px",
+  minWidth: "500px",
+  maxWidth: "500px",
   minHeight: "50px",
   borderBottom: "1px solid #d3d3d3",
   display: "flex",
@@ -328,4 +377,14 @@ export const MyWishListContent = styled("div")(({ theme }) => ({
   flexDirection: "column",
   height: "100%",
   // marginTop: 100,
+}));
+
+export const DownIconWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+}));
+export const StyledDownIcon = styled(ArrowDownIcon)(({ theme }) => ({
+  width: "4em",
+  height: "4em",
 }));

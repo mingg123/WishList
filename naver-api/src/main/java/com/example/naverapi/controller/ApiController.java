@@ -39,9 +39,10 @@ public class ApiController {
 
     // wishList추가
     @PostMapping("")
-    public WishListDto add(@RequestBody WishListDto wishListDto) {
+    public List<WishListDto> add(@RequestBody WishListDto wishListDto) {
         log.info("추가 : {}", wishListDto);
-        return wishListService.add(wishListDto);
+        wishListService.add(wishListDto);
+        return wishListService.findAll();
     }
 
     @GetMapping("/all")
@@ -50,8 +51,8 @@ public class ApiController {
     }
 
     @DeleteMapping("/{index}")
-    public void delete(@PathVariable int index) {
-        wishListService.delete(index);
+    public List<WishListDto> delete(@PathVariable int index) {
+        return wishListService.delete(index);
     }
 
     // 방문 추가

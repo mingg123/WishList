@@ -3,6 +3,7 @@ import { off } from "process";
 import { handleActions } from "redux-actions";
 import { action } from "typesafe-actions";
 import {
+  addVisitAPI,
   addWishListAPI,
   deleteWishListAPI,
   getAllWishListAPI,
@@ -14,6 +15,10 @@ const GET_LIST = "wishList/GET_LIST";
 const GET_LIST_SUCCESS = "wishList/get_LIST_SUCCESS";
 const GET_LIST_FAILURE = "wishList/GET_LIST_FAILURE";
 
+const POST_WISHLIST = "wishList/POST_WISHLIST";
+const POST_WISHLIST_SUCCESS = "wishList/POST_WISHLIST_SUCCESS";
+const POST_WISHLIST_FAILURE = "wishList/POST_WISHLIST_FAILURE";
+
 const POST_VISIT = "wishList/POST_VISIT";
 
 const GET_ALL_LIST = "wishList/GET_ALL_LIST";
@@ -21,6 +26,8 @@ const GET_ALL_LIST_SUCCESS = "wishList/GET_ALL_LIST_SUCCESS";
 const GET_ALL_LIST_FAILURE = "wishList/GET_ALL_LIST_FAILURE";
 
 const DELETE_LIST = "wishList/DELETE_LIST";
+const DELETE_LIST_SUCCESS = "wishList/DELETE_LIST_SUCCESS";
+const DELETE_LIST_FAILURE = "wishList/DELETE_LIST_FAILURE";
 
 const initialState = {
   loading: {
@@ -37,6 +44,21 @@ const wishList = handleActions<any, any>(
       loading: {
         ...state.loading,
         DELETE_LIST: true,
+      },
+    }),
+    [DELETE_LIST_SUCCESS]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        DELETE_LIST: false,
+      },
+      allList: action.payload,
+    }),
+    [DELETE_LIST_FAILURE]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        DELETE_LIST: false,
       },
     }),
     [GET_ALL_LIST]: (state) => ({
@@ -83,11 +105,34 @@ const wishList = handleActions<any, any>(
       },
       list: action.payload,
     }),
+
     [POST_VISIT]: (state) => ({
       ...state,
       loading: {
         ...state.loading,
         POST_VISIT: true,
+      },
+    }),
+    [POST_WISHLIST]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        POST_WISHLIST: true,
+      },
+    }),
+    [POST_WISHLIST_SUCCESS]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        POST_WISHLIST: false,
+      },
+      allList: action.payload,
+    }),
+    [POST_WISHLIST_FAILURE]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        POST_WISHLIST: false,
       },
     }),
   },
@@ -130,25 +175,44 @@ export const getAllList = () => async (dispatch: any) => {
   }
 };
 export const addWishList = (data: WishListDO) => async (dispatch: any) => {
-  dispatch({ type: POST_VISIT });
+  dispatch({ type: POST_WISHLIST });
   try {
     const response = await addWishListAPI(data);
+    dispatch({
+      type: POST_WISHLIST_SUCCESS,
+      payload: response.data,
+    });
   } catch (e) {
-    console.log("위시리스트 추가 실패");
+    dispatch({
+      type: POST_WISHLIST_FAILURE,
+      payload: e,
+      error: true,
+    });
     throw e;
   }
 };
 
+export const addVisit = (idx: number) => async (dispatch: any) => {
+  dispatch({ type: POST_VISIT });
+  try {
+    const response = await addVisitAPI(idx);
+  } catch (e) {
+    console.log("방문 추가 실패");
+    throw e;
+  }
+};
 export const deleteList = (idx: number) => async (dispatch: any) => {
   dispatch({ type: DELETE_LIST });
   try {
     const response = await deleteWishListAPI(idx);
-    //이부분 한번만 더보기
-    // if (response.status == 200) {
-    //   await getAllWishListAPI();
-    // }
+    dispatch({ type: DELETE_LIST_SUCCESS, payload: response.data });
   } catch (e) {
     console.log("위시리스트 삭제 실패");
+    dispatch({
+      type: DELETE_LIST_FAILURE,
+      payload: e,
+      error: true,
+    });
     throw e;
   }
 };
