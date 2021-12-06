@@ -135,10 +135,12 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
         const duplicatePlace = allList.some((lists) => {
           return lists.address == list.address;
         });
-        if (duplicatePlace) alert("이미 위시리스트에 추가되어 있습니다.");
-      } else {
-        dispatch(addWishList(list));
+        if (duplicatePlace) {
+          alert("이미 위시리스트에 추가되어 있습니다.");
+          return;
+        }
       }
+      dispatch(addWishList(list));
     },
     [list, allList, dispatch]
   );
