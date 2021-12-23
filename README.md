@@ -1,5 +1,5 @@
-# WishList
-
+# WishLt
+검색을 통해 위시리스트를 만들고 방문 기록을 저장할 수 있는 서비스
 # Introduction
 ![image](https://user-images.githubusercontent.com/52990629/144709322-fb2e9030-80c8-4737-b62d-594c9fdf9ef5.png)
 
