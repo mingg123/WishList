@@ -14,6 +14,7 @@ import {
   getList,
 } from "../modules/wishList";
 import { flexbox } from "@mui/system";
+import { debounce, throttle } from "lodash";
 interface MyWishListProps {
   allList: WishListDO[];
 }
@@ -44,17 +45,31 @@ export const Main: React.FC<IMainProps> = ({
   allList,
 }) => {
   const dispatch = useDispatch();
-  const handleTextField = useCallback(
-    (e) => {
-      // onChangeInput(e.target.value);
-      dispatch(changeInput(e.target.value));
-      console.log(input);
-    },
-    [input, dispatch]
-  );
+
+  const onDebounceApply = debounce((e: any) => {
+    onClickApply(e);
+  }, 1000);
+
+  //각 단어는 한개 입력받은 이후 500ms 후에 입력 받음
+  // 입력 후 1000ms 후에 검색 api 날라감
+  const onDebounceChange = debounce((e) => {
+    handleTextField(e);
+    console.log(e.target.value);
+    setTimeout(() => {
+      onDebounceApply(e);
+      // console.log("timeout!");
+    }, 500);
+    // console.log("debounce");
+  }, 500);
+
+  const handleTextField = (e: any) => {
+    dispatch(changeInput(e.target.value));
+    // console.log(input);
+  };
 
   const onClickApply = useCallback(
     async (e) => {
+      console.log("input", input);
       dispatch(getList(input));
     },
     [input, dispatch]
@@ -66,16 +81,15 @@ export const Main: React.FC<IMainProps> = ({
         <StyledTextField
           placeholder="위시리스트에 추가 할 내용을 입력해주세요"
           variant="outlined"
-          onChange={handleTextField}
+          // onChange={handleTextField}
+          onChange={onDebounceChange}
           onKeyPress={(e) => {
             if (e.key == "Enter") {
               onClickApply(e);
             }
           }}
         ></StyledTextField>
-        <StyledButton onClick={onClickApply} variant="contained">
-          검색
-        </StyledButton>
+        <StyledButton variant="contained">검색</StyledButton>
       </SearchWrapper>
       <ImageResultComponent
         list={list}
@@ -178,7 +192,11 @@ const ImageResultComponent: React.FC<ImageResultProps> = ({
               <ImageContentContainer>
                 <ImageContentComponent
                   title={"장소"}
-                  content={list.title.replace(/<(\/b|b)([^>]*)>/gi, "")}
+                  content={
+                    list.title
+                      ? list.title.replace(/<(\/b|b)([^>]*)>/gi, "")
+                      : ""
+                  }
                 />
               </ImageContentContainer>
               <ImageContentContainer>
