@@ -1,4 +1,4 @@
-const CHANGE_INPUT = "search/CHANGE_INPUT";
+const CHANGE_INPUT = "search/CHANGE_INPUT" as const;
 
 const initialState = {
   input: "",
